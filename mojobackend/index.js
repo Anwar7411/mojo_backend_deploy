@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const cors = require("cors")
 
-const {connection} = require("./server")
+const {connection} = require("./org/server")
 const {AppointmentRoute}=require('./routes/Appointment.route');
 const { AdminRoute } = require("./routes/Admin.route");
 const { DoctorModel } = require("./models/Doctor.model");
