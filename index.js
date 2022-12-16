@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const cors = require("cors")
 require('dotenv').config();
+const PORT=process.env.PORT || 8080;
 
 const {connection} = require("./org/server")
 const {AppointmentRoute}=require('./routes/Appointment.route');
@@ -25,15 +26,6 @@ app.use(cors({
     origin : "*"
 }))
 
-const connectDB = async () => {
-    try {
-        await connection;
-        console.log("connection Sucessfull")
-    } catch (error) {
-      console.log(error);
-      process.exit(1);
-    }
-  }
 
 
 app.post("/login/:name", async (req, res) => {
@@ -85,23 +77,17 @@ app.use("/admin",AdminRoute)
 
 
 
-connectDB().then(() => {
-    app.listen(8080, () => {
-        console.log("listening for requests");
+
+
+    app.listen(PORT, async () => {
+        try{
+            await connection;
+            console.log("Connected to DB Successfully")
+        }
+        catch(err){
+            console.log("Error connecting to DB")
+            console.log(err)
+        }
+        console.log("Listening on PORT 8080")
     })
-})
-
-
-
-    // app.listen(8080, async () => {
-    //     try{
-    //         await connection;
-    //         console.log("Connected to DB Successfully")
-    //     }
-    //     catch(err){
-    //         console.log("Error connecting to DB")
-    //         console.log(err)
-    //     }
-    //     console.log("Listening on PORT 8080")
-    // })
 
