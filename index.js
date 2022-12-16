@@ -2,6 +2,7 @@ const express = require("express")
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const cors = require("cors")
+const { MongoClient } = require('mongodb');
 
 const {connection} = require("./org/server")
 const {AppointmentRoute}=require('./routes/Appointment.route');
@@ -16,6 +17,7 @@ const { DoctorRoute } = require("./routes/Doctor.route");
 const { SignupRoute } = require("./routes/SignupRoute.route");
 
 const app = express();
+const client = new MongoClient(uri);
 
 app.use(express.json())
 
@@ -74,15 +76,21 @@ app.use("/admin",AdminRoute)
 
 
 
-app.listen(8080, async () => {
-    try{
-        await connection;
-        console.log("Connected to DB Successfully")
-    }
-    catch(err){
-        console.log("Error connecting to DB")
-        console.log(err)
-    }
-    console.log("Listening on PORT 8080")
-})
 
+
+
+client.connect(err => {
+    if(err){ console.error(err); return false;}
+    // connection to mongo is successful, listen for requests
+    app.listen(8080, async () => {
+        try{
+            await connection;
+            console.log("Connected to DB Successfully")
+        }
+        catch(err){
+            console.log("Error connecting to DB")
+            console.log(err)
+        }
+        console.log("Listening on PORT 8080")
+    })
+});
