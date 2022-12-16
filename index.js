@@ -67,13 +67,13 @@ app.post("/login/:name", async (req, res) => {
 
 app.use("/signup",SignupRoute)
 
-app.use(Auth)
-app.use("/appointment",AppointmentRoute)
-app.use("/users",UserRoute)
-app.use("/doctor",DoctorRoute)
+//app.use(Auth)
+app.use("/appointment",Auth,AppointmentRoute)
+app.use("/users",Auth,UserRoute)
+app.use("/doctor",Auth,DoctorRoute)
 
- app.use(AdminAuth)
-app.use("/admin",AdminRoute)
+ //app.use(AdminAuth)
+app.use("/admin",AdminAuth,AdminRoute)
 
 
 
