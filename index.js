@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const cors = require("cors")
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 const {connection} = require("./org/server")
 const {AppointmentRoute}=require('./routes/Appointment.route');
@@ -17,6 +18,7 @@ const { DoctorRoute } = require("./routes/Doctor.route");
 const { SignupRoute } = require("./routes/SignupRoute.route");
 
 const app = express();
+const uri = process.env.mongo_url;
 const client = new MongoClient(uri);
 
 app.use(express.json())
