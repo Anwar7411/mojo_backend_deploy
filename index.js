@@ -2,7 +2,6 @@ const express = require("express")
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 const cors = require("cors")
-const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 const {connection} = require("./org/server")
@@ -18,14 +17,23 @@ const { DoctorRoute } = require("./routes/Doctor.route");
 const { SignupRoute } = require("./routes/SignupRoute.route");
 
 const app = express();
-const uri = process.env.mongo_url;
-const client = new MongoClient(uri);
+
 
 app.use(express.json())
 
 app.use(cors({
     origin : "*"
 }))
+
+const connectDB = async () => {
+    try {
+        await connection;
+        console.log("connection Sucessfull")
+    } catch (error) {
+      console.log(error);
+      process.exit(1);
+    }
+  }
 
 
 app.post("/login/:name", async (req, res) => {
@@ -77,22 +85,23 @@ app.use("/admin",AdminRoute)
 
 
 
-
-
-
-
-client.connect(err => {
-    if(err){ console.error(err); return false;}
-    // connection to mongo is successful, listen for requests
-    app.listen(8080, async () => {
-        try{
-            await connection;
-            console.log("Connected to DB Successfully")
-        }
-        catch(err){
-            console.log("Error connecting to DB")
-            console.log(err)
-        }
-        console.log("Listening on PORT 8080")
+connectDB().then(() => {
+    app.listen(8080, () => {
+        console.log("listening for requests");
     })
-});
+})
+
+
+
+    // app.listen(8080, async () => {
+    //     try{
+    //         await connection;
+    //         console.log("Connected to DB Successfully")
+    //     }
+    //     catch(err){
+    //         console.log("Error connecting to DB")
+    //         console.log(err)
+    //     }
+    //     console.log("Listening on PORT 8080")
+    // })
+
